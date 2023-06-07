@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Wordle Game</title>
+</head>
+<body>
+    <style>
+        input {
+            width: 50px;
+            height: 50px;
+            font-size: 40px;
+            text-align: center;
+        }
+        #HiddenButton {
+            position: relative;
+            top: 160px;
+        }
+        #ResetButton {
+            position: fixed;
+            top: 10px;
+            right: 0px;
+        }
+    </style>
+
+<div id = 'my_div'>
+    <center>
+    <br><br><br><h1> Wordle Game <br> Select</h1> <br><br><br>
+    <button id="RandM" style="padding: 70px 98px; font-size: 2.5em; margin-right: 5px">랜덤 모드</button>
+    <button id="UserM" style="padding: 70px 30px; font-size: 2.5em; margin-left: 5px">사용자 지정 모드</button>
+    </center>
+</div>
+
+<div id = 'HiddenButton'> <center>
+    <button id="AnsB"> 정답 설정 </button>
+    <button id="SubB"> 제출 </button>
+</center> </div>
+
+<div id = 'ResetButton'>
+    <button id="ResB"> 모드 선택 </button>
+</div>
+
+
+<script>
+    const $RandButton = document.querySelector('#RandM');
+    const $UserButton = document.querySelector('#UserM');
+    const AnsB = document.getElementById('AnsB');
+    const SubB = document.getElementById('SubB');
+    const ResB = document.getElementById('ResB');
+    const $AnswerButton = document.querySelector('#AnsB');
+    const $SubmitButton = document.querySelector('#SubB');
+    const $ResetButton = document.querySelector('#ResB');
+
+    $ResetButton.addEventListener('click', //새로고침 함수
+    Reset => {
+        location.reload();
+    })
+
+    AnsB.style.display = 'none'; //제출 버튼 숨김
+    SubB.style.display = 'none'; //정답 설정 버튼 숨김
+    ResB.style.display = 'none'; //새로고침 버튼 숨김
+    
+    function deleteDiv() { //모드 선택시 div 삭제
+        const div = document.getElementById('my_div');
+        div.remove();
+    }
+
+    function CreateWordle() { //wordle 게임 화면 생성 함수
+    var template1 = ` <center> 
+    <h1> Wordle Game <br> Play</h1> <br><br><br>
+    <div>
+    <input class="input">
+    <input class="input">
+    <input class="input">
+    <input class="input">
+    <input class="input">
+    </div> </center>`;
+    document.querySelector('body').insertAdjacentHTML('beforeend',template1);
+    }
+
+    //랜덤 모드 선택 시---------------------------------------------------------------------------
+    $RandButton.addEventListener('click',
+    correct => { 
+    deleteDiv(); //화면 지우기
+    CreateWordle(); //화면 생성
+    ResB.style.display = 'block'; //새로고침 버튼 보이기
+    SubB.style.display = 'block'; //제출 버튼 보이기
+
+    console.log("랜덤 모드 선택!");
+
+    var RandAnswer = ['apple','adult','beast','break','cross',
+    'eight','focus','giant','hobby','hyena','manor','model','puppy']; //정답 배열
+    const random = Math.floor(Math.random() * RandAnswer.length); //랜덤 인덱스
+    console.log(RandAnswer[random]); //선정된 답 콘솔로그로 보기
+
+    var CorrectAnswer = RandAnswer[random];
+    $SubmitButton.addEventListener('click', //제출 버튼 클릭 시
+    correct => {
+        var input = document.querySelectorAll('.input');
+    //제출 버튼 클릭 시 HTML 추가
+    var template2 = `<center> <div>
+    <input class="input">
+    <input class="input">
+    <input class="input">
+    <input class="input">
+    <input class="input">
+    </div> </center>`;
+    document.querySelector('body').insertAdjacentHTML('beforeend',template2);
+    })
+    });
+
+
+    //사용자 지정 모드 선택 시---------------------------------------------------------------------------
+    $UserButton.addEventListener('click',
+    correct => { 
+    deleteDiv(); //화면 지우기
+    console.log("사용자 지정 모드 선택!");
+
+    //사용자 지정 정답 설정 화면 HTML 추가
+    var template1 = ` <center> <div id = 'my_div'>
+    <h1> Wordle Game <br> Answer Customizing</h1> <br><br><br>
+    <input class="Answer">
+    <input class="Answer">
+    <input class="Answer">
+    <input class="Answer">
+    <input class="Answer"> <br><br>
+    </div> </center>`;
+    document.querySelector('body').insertAdjacentHTML('beforeend',template1);
+    ResB.style.display = 'block'; //새로고침 버튼 보이기
+    AnsB.style.display = 'block'; // 정답 설정 버튼 보이게
+
+    var UserAnswer = document.querySelectorAll('.Answer'); //사용자가 설정한 정답 저장
+    var CorrectAnswer = ''; //정답
+
+    $AnswerButton.addEventListener('click', //정답 설정 버튼 클릭 시
+    correct => {
+        for(i=0; i<5; i++) {
+        CorrectAnswer += UserAnswer[i].value;
+        }
+        console.log(CorrectAnswer); //사용자 지정 정답 콘솔로그 출력
+        deleteDiv(); //화면 지우기
+        CreateWordle(); //화면 생성
+        AnsB.style.display = 'none'; //정답 설정 버튼 숨김
+        SubB.style.display = 'block'; //제출 버튼 보이게
+    });
+
+    $SubmitButton.addEventListener('click', //제출 버튼 클릭 시
+    correct => {
+        var input = document.querySelectorAll('.input');
+        console.log('제출 버튼 클릭됨!');
+
+     //제출 버튼 클릭 시 HTML 추가
+    var template2 = `<center> <div>
+    <input class="input">
+    <input class="input">
+    <input class="input">
+    <input class="input">
+    <input class="input">
+    </div> </center>`;
+    document.querySelector('body').insertAdjacentHTML('beforeend',template2);
+    })
+    });
+    
+</script>
+</body>
+</html>
